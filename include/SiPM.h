@@ -19,6 +19,7 @@ public:
   SiPM(unsigned short sid, unsigned short nMicrocells);
   ~SiPM();
   unsigned short size() const;
+  unsigned short GetID() const;
 };
 
 #endif

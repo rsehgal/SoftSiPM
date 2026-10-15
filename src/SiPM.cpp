@@ -12,7 +12,7 @@ SiPM::SiPM(unsigned short sid, unsigned short nMicrocells) : sipmId(sid), numOfM
 {
 
   for (unsigned short cid = 0; cid < numOfMicrocells; cid++) {
-    vecOfMicrocells.push_back(Microcell{cid});
+    vecOfMicrocells.push_back(Microcell{cid,numOfMicrocells});
   }
   // std::fill(vecOfMicrocells.begin(), vecOfMicrocells.end(), Microcell{});
 }
@@ -21,4 +21,9 @@ unsigned short SiPM::size() const
 {
   return vecOfMicrocells.size();
 }
+
+unsigned short SiPM::GetID() const{
+  return sipmId;
+}
+
 SiPM::~SiPM() {}

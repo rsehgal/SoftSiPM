@@ -12,18 +12,24 @@ constexpr double kTauRecharge = 50.0;   // ns
 constexpr double kQfullFC     = 1009.0; // fC
 
 class Microcell {
-  unsigned short cellId;
-  bool fired;
-  double tLast;
-  double gainFactor;
+  unsigned short cellId = 0;
+  bool fired = false;
+  double tLast = 0.;
+  double gainFactor = 1.;
+  unsigned short xbin =10000;
+  unsigned short ybin=10000;
 
 public:
-  Microcell(unsigned short cid = 0) : cellId(cid)
+  Microcell(unsigned short cid=0) : cellId(cid), fired(false), tLast(0.), gainFactor(1.) {}
+  Microcell(unsigned short cid , unsigned short nMicrocells) : Microcell(cid)
   {
-    bool fired        = false;
-    double tLast      = 0.0;
-    double gainFactor = 1.0;
+    unsigned short nCellInEachDim = std::sqrt(nMicrocells);
+    ybin                          = nMicrocells / nCellInEachDim;
+    xbin                          = nMicrocells % nCellInEachDim;
   }
+
+  void CalculateXbin() {}
+  void CalculateYbin() {}
 
   ~Microcell() {}
 
@@ -48,5 +54,10 @@ public:
     CalculateGainFactor(t);
     return gainFactor * kQfullFC;
   }
+
+  void Print(){
+    std::cout << cellId << " : " << xbin <<" : " << ybin <<  " :: " << gainFactor <<std::endl;
+  }
+  unsigned short GetID() const { return cellId; }
 };
 #endif
