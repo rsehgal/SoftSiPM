@@ -13,13 +13,18 @@ class SiPM {
   std::vector<Microcell> vecOfMicrocells;
   unsigned short sipmId;
   unsigned short numOfMicrocells;
+  double xlength;
+  double ylength;
 
 public:
   SiPM();
-  SiPM(unsigned short sid, unsigned short nMicrocells);
+  SiPM(unsigned short sid, unsigned short nMicrocells,double xlen=6, double ylen=6);
   ~SiPM();
   unsigned short size() const;
   unsigned short GetID() const;
+
+  unsigned short MicrocellId(double x, double y);
+  Microcell& GetMicrocell(double x, double y);
 };
 
 #endif

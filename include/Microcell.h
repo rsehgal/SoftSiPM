@@ -42,7 +42,9 @@ public:
     if (!fired) {
       gainFactor = 1.0;
       fired      = true;
+      //std::cout << "NOt fired ..." << std::endl;
     } else {
+      //std::cout << "Fired......" << std::endl;
       gainFactor = 1.0 - std::exp(-(t - tLast) / kTauRecharge);
       if (gainFactor < 0.0) gainFactor = 0.0; // photons fed out of time order
     }
