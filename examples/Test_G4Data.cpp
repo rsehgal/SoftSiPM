@@ -6,6 +6,8 @@
 #include <vector>
 #include "globals.h"
 #include "SiPM.h"
+#include <TH1F.h>
+#include <TCanvas.h>
 int main(int argc, char *argv[])
 {
   TApplication *fApp = new TApplication("fApp", NULL, NULL);
@@ -39,10 +41,17 @@ int main(int argc, char *argv[])
   Long64_t nbytes = 0;
 
   TH2F *posHist = new TH2F("posHist", "posHist", 1000, -3., 3., 1000, -3., 3.);
+  TH1F *qhist   = new TH1F("QHist", "QHist", 100, 0, 200);
 
   std::vector<Photon> simPhotonsVec;
 
+  SiPM u(1, 22292, 6, 6);
+
   for (Long64_t i = 0; i < nentries; i++) {
+
+    simPhotonsVec.clear();
+    u.Reset();
+
     nbytes += ftree->GetEntry(i);
     for (unsigned int j = 0; j < posXVec->size(); j++) {
       posHist->Fill(posXVec->at(j), posYVec->at(j));
@@ -50,17 +59,20 @@ int main(int argc, char *argv[])
       //         << std::endl;
       simPhotonsVec.push_back(Photon{posXVec->at(j), posYVec->at(j), arrivalTimeVec->at(j)});
     }
+
+    sort(simPhotonsVec.begin(), simPhotonsVec.end(), compareByArrivalTime);
+
+    double totalCharge = u.GetIntegratedCharge(simPhotonsVec);
+    if (!(i%100)) {
+      std::cout << "--------------------------------------" << std::endl;
+      std::cout << "Total Charge in an event : " << i << " : " << totalCharge << std::endl;
+      std::cout << "--------------------------------------" << std::endl;
+    }
+    qhist->Fill(totalCharge / 1000.);
   }
-
-  SiPM u(1, 22292, 6, 6);
-  sort(simPhotonsVec.begin(), simPhotonsVec.end(), compareByArrivalTime);
-
-  double totalCharge = u.GetIntegratedCharge(simPhotonsVec);
-  std::cout << "--------------------------------------" << std::endl;
-  std::cout << "Total Charge in an event : " << totalCharge << std::endl;
-  std::cout << "--------------------------------------" << std::endl;
-
   posHist->Draw();
+  new TCanvas;
+  qhist->Draw("hist");
 
   fApp->Run();
 

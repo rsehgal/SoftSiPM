@@ -13,15 +13,17 @@ constexpr double kQfullFC     = 1009.0; // fC
 
 class Microcell {
   unsigned short cellId = 0;
-  bool fired = false;
-  double tLast = 0.;
-  double gainFactor = 1.;
-  unsigned short xbin =10000;
-  unsigned short ybin=10000;
+  bool fired            = false;
+  double tLast          = 0.;
+  double gainFactor     = 1.;
+  unsigned short xbin   = 10000;
+  unsigned short ybin   = 10000;
+  unsigned short count  = 0;
 
 public:
-  Microcell(unsigned short cid=0) : cellId(cid), fired(false), tLast(0.), gainFactor(1.) {}
-  Microcell(unsigned short cid , unsigned short nMicrocells) : Microcell(cid)
+  Microcell(unsigned short cid = 0) : cellId(cid), fired(false), tLast(0.), gainFactor(1.), count(0) {}
+
+  Microcell(unsigned short cid, unsigned short nMicrocells) : Microcell(cid)
   {
     unsigned short nCellInEachDim = std::sqrt(nMicrocells);
     ybin                          = nMicrocells / nCellInEachDim;
@@ -33,18 +35,23 @@ public:
 
   ~Microcell() {}
 
-  void Reset() { fired = false; }
+  void Reset()
+  {
+    fired = false;
+    count = 0;
+  }
 
   double GainFactor() const { return gainFactor; }
 
   void CalculateGainFactor(double t)
   {
+    count++;
     if (!fired) {
       gainFactor = 1.0;
       fired      = true;
-      //std::cout << "NOt fired ..." << std::endl;
+      // std::cout << "NOt fired ..." << std::endl;
     } else {
-      //std::cout << "Fired......" << std::endl;
+      // std::cout << "Fired......" << std::endl;
       gainFactor = 1.0 - std::exp(-(t - tLast) / kTauRecharge);
       if (gainFactor < 0.0) gainFactor = 0.0; // photons fed out of time order
     }
@@ -57,9 +64,7 @@ public:
     return gainFactor * kQfullFC;
   }
 
-  void Print(){
-    std::cout << cellId << " : " << xbin <<" : " << ybin <<  " :: " << gainFactor <<std::endl;
-  }
+  void Print() { std::cout << cellId << " : " << xbin << " : " << ybin << " :: " << gainFactor << std::endl; }
   unsigned short GetID() const { return cellId; }
 };
 #endif
