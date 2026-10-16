@@ -1,0 +1,53 @@
+#include <TTree.h>
+#include <TH2F.h>
+#include <TFile.h>
+#include <TApplication.h>
+#include <iostream>
+#include <vector>
+int main(int argc, char *argv[])
+{
+  TApplication *fApp = new TApplication("fApp",NULL,NULL);
+  TFile *fp =new TFile(argv[1],"r");
+  TTree *ftree = (TTree*)fp->Get("ftree");
+
+  // Declaration of leaves types
+  Double_t eDep;
+  Double_t numOfScintillationPhotons;
+  Double_t numOfWLSPhotons;
+  Double_t numOfReachedWLSPhotons;
+  Double_t numOfAbsorbedWLSPhotons;
+  Double_t numOfDetectedWLSPhotons;
+  std::vector<double> *posXVec=nullptr;
+  std::vector<double> *posYVec=nullptr;
+  std::vector<double> *arrivalTimeVec=nullptr;
+
+  // Set branch addresses.
+  ftree->SetBranchAddress("eDep", &eDep);
+  ftree->SetBranchAddress("numOfScintillationPhotons", &numOfScintillationPhotons);
+  ftree->SetBranchAddress("numOfWLSPhotons", &numOfWLSPhotons);
+  ftree->SetBranchAddress("numOfReachedWLSPhotons", &numOfReachedWLSPhotons);
+  ftree->SetBranchAddress("numOfAbsorbedWLSPhotons", &numOfAbsorbedWLSPhotons);
+  ftree->SetBranchAddress("numOfDetectedWLSPhotons", &numOfDetectedWLSPhotons);
+  ftree->SetBranchAddress("posXVec", &posXVec);
+  ftree->SetBranchAddress("posYVec", &posYVec);
+  ftree->SetBranchAddress("arrivalTimeVec", &arrivalTimeVec);
+
+  Long64_t nentries = ftree->GetEntries();
+
+  Long64_t nbytes = 0;
+
+  TH2F *posHist = new TH2F("posHist","posHist", 1000, -3., 3., 1000, -3., 3.);
+
+  for (Long64_t i = 0; i < nentries; i++) {
+    nbytes += ftree->GetEntry(i);
+    for (unsigned int j = 0; j < posXVec->size(); j++) {
+      posHist->Fill(posXVec->at(j), posYVec->at(j));
+	std::cout << posXVec->at(j) <<" : " << posYVec->at(j) << std::endl;
+    }
+  }
+
+  posHist->Draw();
+  fApp->Run();
+
+  return 0;
+}

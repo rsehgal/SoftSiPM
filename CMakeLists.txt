@@ -18,6 +18,18 @@ else()
     target_include_directories(SoftSiPM_Core INTERFACE include)
 endif()
 
+option(ROOT "Enable ROOT" ON)
+
+if(ROOT)
+add_definitions(-DUSE_ROOT)
+find_package(ROOT REQUIRED)
+include_directories(AFTER SYSTEM ${ROOT_INCLUDE_DIRS})
+set(EXTERNAL_LIBS ${EXTERNAL_LIBS}
+${ROOT_LIBRARIES}
+)
+endif(ROOT)
+
+
 # 2. Automatically find and build all programs in the example directory
 file(GLOB EXAMPLE_SOURCES examples/*.cpp)
 
@@ -29,5 +41,5 @@ foreach(EXAMPLE_SRC ${EXAMPLE_SOURCES})
     add_executable(${EXE_NAME} ${EXAMPLE_SRC})
     
     # Link the core library (provides include paths and compiled sources)
-    target_link_libraries(${EXE_NAME} PRIVATE SoftSiPM_Core)
+    target_link_libraries(${EXE_NAME} PRIVATE SoftSiPM_Core ${EXTERNAL_LIBS}) 
 endforeach()
