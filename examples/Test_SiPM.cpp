@@ -6,6 +6,8 @@
 #include <iostream>
 #include "SiPM.h"
 #include "Microcell.h"
+#include "globals.h"
+#include <algorithm>
 int main(int argc, char *argv[])
 {
   SiPM s(0, 100);
@@ -46,6 +48,12 @@ int main(int argc, char *argv[])
   {
     Photon ph(1.3, 2.5, 60);
     std::cout << "Integrated charge of a Photon : " << u.GetIntegratedCharge(ph) << std::endl;
+  }
+  u.Reset();
+  {
+    std::vector<Photon> photonVec = GetRandomPhotonVec();
+    sort(photonVec.begin(),photonVec.end(),compareByArrivalTime);
+    u.GetIntegratedCharge(photonVec);
   }
 
   return 0;

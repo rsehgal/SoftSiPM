@@ -8,19 +8,7 @@
 
 #include "Microcell.h"
 #include <vector>
-
-struct Photon {
-  double xposition;
-  double yposition;
-  double arrivalTime;
-
-  Photon(double xpos, double ypos, double arrTime)
-  {
-    xposition   = xpos;
-    yposition   = ypos;
-    arrivalTime = arrTime;
-  }
-};
+#include "globals.h"
 
 class SiPM {
   std::vector<Microcell> vecOfMicrocells;

@@ -30,7 +30,7 @@ unsigned short SiPM::GetID() const
 
 void SiPM::Reset()
 {
-  for (auto& micCell : vecOfMicrocells) {
+  for (auto &micCell : vecOfMicrocells) {
     micCell.Reset();
   }
 }
@@ -54,7 +54,9 @@ Microcell &SiPM::GetMicrocell(double x, double y)
 
 double SiPM::GetIntegratedCharge(Photon ph)
 {
-  return GetMicrocell(ph.xposition, ph.yposition).IntegratedCharge(ph.arrivalTime);
+  double integCharge = GetMicrocell(ph.xposition, ph.yposition).IntegratedCharge(ph.arrivalTime);
+  std::cout << "Integrated charge of photon : " << integCharge << std::endl; 
+  return integCharge;
 }
 
 double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec)
@@ -63,6 +65,7 @@ double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec)
   for (auto ph : photonVec) {
     totalCharge += GetIntegratedCharge(ph);
   }
+  return totalCharge;
 }
 
 SiPM::~SiPM() {}
