@@ -41,6 +41,7 @@ struct Photon {
   }
 };
 
+extern bool verbose;
 extern bool compareByArrivalTime(const Photon& a, const Photon& b);
 // Only for testing
 extern std::vector<Photon> GetRandomPhotonVec();

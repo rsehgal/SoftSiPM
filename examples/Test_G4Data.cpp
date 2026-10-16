@@ -46,20 +46,21 @@ int main(int argc, char *argv[])
     nbytes += ftree->GetEntry(i);
     for (unsigned int j = 0; j < posXVec->size(); j++) {
       posHist->Fill(posXVec->at(j), posYVec->at(j));
-      //std::cout << posXVec->at(j) << " : " << posYVec->at(j) << " :: ArrivalTime :  " << arrivalTimeVec->at(j)
-        //        << std::endl;
+      // std::cout << posXVec->at(j) << " : " << posYVec->at(j) << " :: ArrivalTime :  " << arrivalTimeVec->at(j)
+      //         << std::endl;
       simPhotonsVec.push_back(Photon{posXVec->at(j), posYVec->at(j), arrivalTimeVec->at(j)});
     }
   }
 
-  
   SiPM u(1, 22292, 6, 6);
-  sort(simPhotonsVec.begin(),simPhotonsVec.end(),compareByArrivalTime);
-  u.GetIntegratedCharge(simPhotonsVec);
-  
+  sort(simPhotonsVec.begin(), simPhotonsVec.end(), compareByArrivalTime);
+
+  double totalCharge = u.GetIntegratedCharge(simPhotonsVec);
+  std::cout << "--------------------------------------" << std::endl;
+  std::cout << "Total Charge in an event : " << totalCharge << std::endl;
+  std::cout << "--------------------------------------" << std::endl;
+
   posHist->Draw();
-
-
 
   fApp->Run();
 

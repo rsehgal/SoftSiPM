@@ -55,6 +55,8 @@ Microcell &SiPM::GetMicrocell(double x, double y)
 double SiPM::GetIntegratedCharge(Photon ph)
 {
   double integCharge = GetMicrocell(ph.xposition, ph.yposition).IntegratedCharge(ph.arrivalTime);
+
+  if(verbose)
   std::cout << "Integrated charge of photon : " << integCharge << std::endl; 
   return integCharge;
 }

@@ -1,5 +1,7 @@
 #include "globals.h"
 
+bool verbose = false;
+
 bool compareByArrivalTime(const Photon &a, const Photon &b)
 {
   return a.arrivalTime < b.arrivalTime;
