@@ -27,7 +27,6 @@ T getRandomNumber(T min, T max)
   }
 }
 
-
 struct Photon {
   double xposition;
   double yposition;

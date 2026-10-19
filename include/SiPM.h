@@ -11,6 +11,12 @@
 #include "globals.h"
 #include <random>
 
+struct CrosstalkHit {
+  Microcell cell;
+  double arrivalTime;
+};
+
+
 class SiPM {
   std::vector<Microcell> vecOfMicrocells;
   unsigned short sipmId;
@@ -44,8 +50,10 @@ public:
 
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
 
+  std::vector<CrosstalkHit> GetCrossTalk(Microcell primary, double arrivalTime);//{}
   std::vector<Microcell> GetCrossTalk(Microcell primary);//{}
   std::vector<Microcell> GetCrossTalk(Photon ph);//{}
+  std::vector<CrosstalkHit> GetCrossTalk_V2(Photon ph);//{}
 };
 
 #endif
