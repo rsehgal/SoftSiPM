@@ -46,4 +46,8 @@ extern bool compareByArrivalTime(const Photon& a, const Photon& b);
 // Only for testing
 extern std::vector<Photon> GetRandomPhotonVec();
 
+extern unsigned short totalNumberOfMicrocells;
+extern unsigned short numberOfMicrocellsX;
+extern unsigned short numberOfMicrocellsY;
+extern double q;
 #endif

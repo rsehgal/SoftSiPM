@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "globals.h"
 constexpr double kTauRecharge = 50.0;   // ns
 constexpr double kQfullFC     = 1009.0; // fC
 
@@ -21,17 +22,33 @@ class Microcell {
   unsigned short count  = 0;
 
 public:
-  Microcell(unsigned short cid = 0) : cellId(cid), fired(false), tLast(0.), gainFactor(1.), count(0) {}
+  Microcell(unsigned short cid = 0) : cellId(cid), fired(false), tLast(0.), gainFactor(1.), count(0)
+  {
+    xbin = GetXBinFromCellID();
+    ybin = GetYBinFromCellID();
+  }
 
   Microcell(unsigned short cid, unsigned short nMicrocells) : Microcell(cid)
   {
-    unsigned short nCellInEachDim = std::sqrt(nMicrocells);
-    ybin                          = nMicrocells / nCellInEachDim;
-    xbin                          = nMicrocells % nCellInEachDim;
+    /*unsigned short nCellInEachDim = std::sqrt(nMicrocells);
+    // ybin                          = nMicrocells / nCellInEachDim;
+    // xbin                          = nMicrocells % nCellInEachDim;
+    ybin = cellId / nCellInEachDim;
+    xbin = cellId % nCellInEachDim;*/
   }
+
+  bool operator<(const Microcell &other) const { return cellId < other.cellId; }
 
   void CalculateXbin() {}
   void CalculateYbin() {}
+
+  unsigned short GetXBinFromCellID() { return cellId % numberOfMicrocellsY; }
+  unsigned short GetYBinFromCellID() { return cellId / numberOfMicrocellsX; }
+
+  unsigned short GetCellIDFromBins() { return ybin * numberOfMicrocellsX + xbin; }
+
+  unsigned short GetXBin() const { return xbin; }
+  unsigned short GetYBin() const { return ybin; }
 
   ~Microcell() {}
 

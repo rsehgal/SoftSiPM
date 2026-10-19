@@ -9,6 +9,7 @@
 #include "Microcell.h"
 #include <vector>
 #include "globals.h"
+#include <random>
 
 class SiPM {
   std::vector<Microcell> vecOfMicrocells;
@@ -16,6 +17,11 @@ class SiPM {
   unsigned short numOfMicrocells;
   double xlength;
   double ylength;
+
+  //SipM related Parameters
+  double ctProb;
+  std::mt19937 rng; 
+  //mutable std::mt19937 rng{std::random_device{}()}; 
 
 public:
   SiPM();
@@ -26,10 +32,20 @@ public:
 
   void Reset();
   unsigned short MicrocellId(double x, double y);
+  Microcell &GetMicrocell(Photon ph);
   Microcell &GetMicrocell(double x, double y);
+  Microcell &GetMicrocell(unsigned short xbin, unsigned short  ybin);
 
+  double GetIntegratedCharge(Microcell& mc, double arrivalTime);
+  //double GetIntegratedCharge_V1(Photon ph);
+  //double GetIntegratedCharge_V2(Photon ph);
   double GetIntegratedCharge(Photon ph);
   double GetIntegratedCharge(std::vector<Photon> photonVec);
+
+  unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
+
+  std::vector<Microcell> GetCrossTalk(Microcell primary);//{}
+  std::vector<Microcell> GetCrossTalk(Photon ph);//{}
 };
 
 #endif
