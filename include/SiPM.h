@@ -7,21 +7,22 @@
 #define SiPM_h
 
 #include "Microcell.h"
-#include <vector>
 #include "globals.h"
 #include <random>
+#include <vector>
 
-struct CrosstalkHit {
+/*struct CrosstalkHit {
   Microcell cell;
   double arrivalTime;
-};
+};*/
 
-struct CrosstalkHit_V2 {
+struct CrosstalkHit {
   unsigned short xbin;
   unsigned short ybin;
   double arrivalTime;
-};
 
+  unsigned short GetCellID() { return ybin * numberOfMicrocellsX + xbin; }
+};
 
 class SiPM {
   std::vector<Microcell> vecOfMicrocells;
@@ -30,14 +31,15 @@ class SiPM {
   double xlength;
   double ylength;
 
-  //SipM related Parameters
+  // SipM related Parameters
   double ctProb;
-  std::mt19937 rng; 
-  //mutable std::mt19937 rng{std::random_device{}()}; 
+  std::mt19937 rng;
+  // mutable std::mt19937 rng{std::random_device{}()};
 
 public:
   SiPM();
-  SiPM(unsigned short sid, unsigned short nMicrocells, double xlen = 6, double ylen = 6);
+  SiPM(unsigned short sid, unsigned short nMicrocells, double xlen = 6,
+       double ylen = 6);
   ~SiPM();
   unsigned short size() const;
   unsigned short GetID() const;
@@ -46,21 +48,19 @@ public:
   unsigned short MicrocellId(double x, double y);
   Microcell &GetMicrocell(Photon ph);
   Microcell &GetMicrocell(double x, double y);
-  Microcell &GetMicrocell(unsigned short xbin, unsigned short  ybin);
+  Microcell &GetMicrocell(unsigned short xbin, unsigned short ybin);
 
-  double GetIntegratedCharge(Microcell& mc, double arrivalTime);
-  //double GetIntegratedCharge_V1(Photon ph);
-  //double GetIntegratedCharge_V2(Photon ph);
+  double GetIntegratedCharge(Microcell &mc, double arrivalTime);
+  // double GetIntegratedCharge_V1(Photon ph);
+  // double GetIntegratedCharge_V2(Photon ph);
   double GetIntegratedCharge(Photon ph);
   double GetIntegratedCharge(std::vector<Photon> photonVec);
 
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
 
-  std::vector<CrosstalkHit_V2> GetCrossTalk_V3(Microcell primary, double arrivalTime);//{}
-  std::vector<CrosstalkHit> GetCrossTalk(Microcell primary, double arrivalTime);//{}
-  std::vector<Microcell> GetCrossTalk(Microcell primary);//{}
-  std::vector<Microcell> GetCrossTalk(Photon ph);//{}
-  std::vector<CrosstalkHit_V2> GetCrossTalk_V2(Photon ph);//{}
+  std::vector<CrosstalkHit> GetCrossTalk(Photon ph); //{}
+  std::vector<CrosstalkHit> GetCrossTalk(Microcell primary,
+                                         double arrivalTime); //{}
 };
 
 #endif

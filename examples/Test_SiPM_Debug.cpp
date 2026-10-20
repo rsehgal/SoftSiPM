@@ -10,27 +10,7 @@
 #include <iostream>
 int main(int argc, char *argv[]) {
   SiPM u(1, 22292, 6, 6);
-  u.Reset();
-
-  {
-    std::vector<Photon> photonVec = GetRandomPhotonVec();
-    sort(photonVec.begin(), photonVec.end(), compareByArrivalTime);
-
-    /*    std::cout << "--------------- Photon Vec -----------------------"
-                  << std::endl;
-        unsigned short phInd = 0;
-        for (auto ph : photonVec) {
-          std::cout << "Photon Index : " << phInd << " : ";
-          ph.Print();
-          std::cout << "Integrated Charge : "
-                    << u.GetMicrocell(ph).IntegratedCharge(ph.arrivalTime)
-                    << std::endl;
-          phInd++;
-        }
-    */
-  }
-
-  {
+   {
     std::vector<Photon> photonVec = GetRandomPhotonVec();
     sort(photonVec.begin(), photonVec.end(), compareByArrivalTime);
     std::cout << "--------------------------------------" << std::endl;
@@ -40,7 +20,7 @@ int main(int argc, char *argv[]) {
 
       std::cout << "========== Photon Index : " << phInd
                 << " ==========" << std::endl;
-      std::vector<CrosstalkHit_V2> crosstalkMicrocellVec = u.GetCrossTalk_V2(ph);
+      std::vector<CrosstalkHit> crosstalkMicrocellVec = u.GetCrossTalk(ph);
 
       if (crosstalkMicrocellVec.size() > 1) {
         std::cout << "CrossTalk Found...." << std::endl;
