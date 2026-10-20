@@ -44,5 +44,17 @@ int main(int argc, char *argv[]) {
     std::cout << "Number of Fired cells : " << numOfFiredCells << std::endl;
   }
 
+  {
+
+    std::cout << "============= TESTING OVERALL INTEGRATED CHARGE WITH and "
+                 "WITHOUT CROSSTALK ==============="
+              << std::endl;
+    SiPM v(1, 22292, 6, 6);
+    std::vector<Photon> photonVec = GetRandomPhotonVec();
+    std::cout << "Integrated Charge Without Crosstalk : "
+              << v.GetIntegratedCharge(photonVec, false) << std::endl;
+    std::cout << "Integrated Charge With Crosstalk : "
+              << v.GetIntegratedCharge(photonVec, true) << std::endl;
+  }
   return 0;
 }

@@ -63,7 +63,7 @@ public:
   void CalculateGainFactor(double t)
   {
     count++;
-    std::cout << "Fired : " << fired << std::endl;
+    //std::cout << "Fired : " << fired << std::endl;
     if (!fired) {
       gainFactor = 1.0;
       fired      = true;

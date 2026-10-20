@@ -90,14 +90,25 @@ GetMicrocell(ph).IntegratedCharge(ph.arrivalTime); if (verbose) std::cout <<
 integCharge;
 
 }*/
-double SiPM::GetIntegratedCharge(Photon ph) {
-  return GetIntegratedCharge(GetMicrocell(ph), ph.arrivalTime);
+double SiPM::GetIntegratedCharge(Photon ph, bool crosstalk) {
+  double integratedCharge = 0.;
+  if (!crosstalk)
+    integratedCharge = GetIntegratedCharge(GetMicrocell(ph), ph.arrivalTime);
+  else {
+    std::vector<CrosstalkHit> crosstalkMicrocellVec = GetCrossTalk(ph);
+    for (const auto &ctMc : crosstalkMicrocellVec) {
+      Microcell &mc = GetMicrocell(ctMc.xbin, ctMc.ybin);
+      integratedCharge += GetIntegratedCharge(mc, ctMc.arrivalTime);
+    }
+  }
+  return integratedCharge;
 }
 
-double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec) {
+double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec,
+                                 bool crosstalk) {
   double totalCharge = 0;
   for (auto ph : photonVec) {
-    totalCharge += GetIntegratedCharge(ph);
+    totalCharge += GetIntegratedCharge(ph, crosstalk);
   }
   return totalCharge;
 }

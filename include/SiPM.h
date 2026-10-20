@@ -53,8 +53,8 @@ public:
   double GetIntegratedCharge(Microcell &mc, double arrivalTime);
   // double GetIntegratedCharge_V1(Photon ph);
   // double GetIntegratedCharge_V2(Photon ph);
-  double GetIntegratedCharge(Photon ph);
-  double GetIntegratedCharge(std::vector<Photon> photonVec);
+  double GetIntegratedCharge(Photon ph, bool crosstalk=true);
+  double GetIntegratedCharge(std::vector<Photon> photonVec, bool crosstalk=true);
 
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
 
