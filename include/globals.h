@@ -9,7 +9,7 @@
 #include <vector>
 #include <random>
 #include <type_traits>
-
+#include <iostream>
 // A flexible template function for integers and floating-point numbers
 template <typename T>
 T getRandomNumber(T min, T max)
@@ -37,6 +37,10 @@ struct Photon {
     xposition   = xpos;
     yposition   = ypos;
     arrivalTime = arrTime;
+  }
+
+  void Print(){
+    std::cout << xposition <<" : "<< yposition << " ::  " << arrivalTime << std::endl;
   }
 };
 

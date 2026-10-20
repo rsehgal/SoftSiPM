@@ -16,6 +16,12 @@ struct CrosstalkHit {
   double arrivalTime;
 };
 
+struct CrosstalkHit_V2 {
+  unsigned short xbin;
+  unsigned short ybin;
+  double arrivalTime;
+};
+
 
 class SiPM {
   std::vector<Microcell> vecOfMicrocells;
@@ -50,10 +56,11 @@ public:
 
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
 
+  std::vector<CrosstalkHit_V2> GetCrossTalk_V3(Microcell primary, double arrivalTime);//{}
   std::vector<CrosstalkHit> GetCrossTalk(Microcell primary, double arrivalTime);//{}
   std::vector<Microcell> GetCrossTalk(Microcell primary);//{}
   std::vector<Microcell> GetCrossTalk(Photon ph);//{}
-  std::vector<CrosstalkHit> GetCrossTalk_V2(Photon ph);//{}
+  std::vector<CrosstalkHit_V2> GetCrossTalk_V2(Photon ph);//{}
 };
 
 #endif

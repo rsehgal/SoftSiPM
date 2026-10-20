@@ -121,9 +121,55 @@ std::vector<Microcell> SiPM::GetCrossTalk(Photon ph)
 {
   return GetCrossTalk(GetMicrocell(ph));
 }
-std::vector<CrosstalkHit> SiPM::GetCrossTalk_V2(Photon ph)
+std::vector<CrosstalkHit_V2> SiPM::GetCrossTalk_V2(Photon ph)
 {
-  return GetCrossTalk(GetMicrocell(ph),ph.arrivalTime);
+  return GetCrossTalk_V3(GetMicrocell(ph),ph.arrivalTime);
+}
+std::vector<CrosstalkHit_V2> SiPM::GetCrossTalk_V3(Microcell primary, double primaryArrivalTime)
+{
+  std::uniform_real_distribution<double> dist(0.0, 1.0);
+  std::vector<CrosstalkHit> queue = {{primary, primaryArrivalTime}};
+  std::vector<CrosstalkHit_V2> new_crosstalk_cells;
+
+  std::set<Microcell> global_fired_cells;
+  while (!queue.empty()) {
+    CrosstalkHit currItem = queue.front();
+    // new_crosstalk_cells.push_back(curr);
+    queue.erase(queue.begin());
+
+    Microcell curr  = currItem.cell;
+    double currTime = currItem.arrivalTime;
+
+    // double q                = 0.0694;
+    unsigned short currXbin = curr.GetXBin();
+    unsigned short currYbin = curr.GetYBin();
+
+    std::vector<Microcell> neighbors = {GetMicrocell(currXbin - 1, currYbin), GetMicrocell(currXbin + 1, currYbin),
+                                        GetMicrocell(currXbin, currYbin - 1), GetMicrocell(currXbin, currYbin + 1)};
+
+    for (const auto &neighbor : neighbors) {
+      // 1. Boundary check
+      // if (neighbor.x >= 0 && neighbor.x < grid_size && neighbor.y >= 0 && neighbor.y < grid_size)
+      {
+
+        // 2. Skip check: if not already fired
+        if (global_fired_cells.find(neighbor) == global_fired_cells.end()) {
+
+          // 3. Roll for crosstalk
+          if (dist(rng) < q) {
+            double crosstalkTime = currTime + 0.01;
+            global_fired_cells.insert(neighbor);
+            new_crosstalk_cells.push_back({neighbor.GetXBin(),neighbor.GetYBin(), crosstalkTime});
+            queue.push_back({neighbor, crosstalkTime}); // Propagate further
+          }
+        }
+      }
+    }
+  }
+
+  // Intentionally putting the primary microcell at the end of crosstalk vector
+  new_crosstalk_cells.push_back({primary.GetXBin(),primary.GetYBin(),primaryArrivalTime});
+  return new_crosstalk_cells;
 }
 
 std::vector<CrosstalkHit> SiPM::GetCrossTalk(Microcell primary, double primaryArrivalTime)

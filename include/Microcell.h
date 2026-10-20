@@ -63,6 +63,7 @@ public:
   void CalculateGainFactor(double t)
   {
     count++;
+    std::cout << "Fired : " << fired << std::endl;
     if (!fired) {
       gainFactor = 1.0;
       fired      = true;
@@ -77,7 +78,9 @@ public:
 
   double IntegratedCharge(double t)
   { // charge of THIS avalanche, in fC
+    //std::cout <<"Arrival time from Integrated charge of Microcell : " << t << std::endl;
     CalculateGainFactor(t);
+    //std::cout << "Calculated Gain factor : " << gainFactor << std::endl;
     return gainFactor * kQfullFC;
   }
 
