@@ -33,6 +33,10 @@ void SiPM::Reset() {
   }
 }
 
+std::vector<Microcell> SiPM::GetVecOfMicrocells() const {
+  return vecOfMicrocells;
+}
+
 unsigned short SiPM::MicrocellId(double x, double y) {
   short numOfMicrocellInX = std::sqrt(numOfMicrocells);
   short numOfMicrocellInY = std::sqrt(numOfMicrocells);
@@ -126,10 +130,14 @@ std::vector<CrosstalkHit> SiPM::GetCrossTalk(Microcell primary,
     unsigned short currYbin = currItem.ybin;
 
     std::vector<CrosstalkHit> neighbors = {
-        {static_cast<unsigned short>(currXbin - 1), static_cast<unsigned short>(currYbin), currTime},
-        {static_cast<unsigned short>(currXbin + 1), static_cast<unsigned short>(currYbin), currTime},
-        {static_cast<unsigned short>(currXbin), static_cast<unsigned short>(currYbin - 1), currTime},
-        {static_cast<unsigned short>(currXbin), static_cast<unsigned short>(currYbin + 1), currTime}};
+        {static_cast<unsigned short>(currXbin - 1),
+         static_cast<unsigned short>(currYbin), currTime},
+        {static_cast<unsigned short>(currXbin + 1),
+         static_cast<unsigned short>(currYbin), currTime},
+        {static_cast<unsigned short>(currXbin),
+         static_cast<unsigned short>(currYbin - 1), currTime},
+        {static_cast<unsigned short>(currXbin),
+         static_cast<unsigned short>(currYbin + 1), currTime}};
 
     for (auto &neighbor : neighbors) {
       // 1. Boundary check

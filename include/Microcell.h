@@ -84,6 +84,9 @@ public:
     return gainFactor * kQfullFC;
   }
 
+  bool Fired() {
+    return fired;
+  }
   void Print() { std::cout << cellId << " : " << xbin << " : " << ybin << " :: " << gainFactor << std::endl; }
   unsigned short GetID() const { return cellId; }
 };

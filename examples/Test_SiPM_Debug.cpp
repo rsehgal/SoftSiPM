@@ -9,8 +9,8 @@
 #include <algorithm>
 #include <iostream>
 int main(int argc, char *argv[]) {
-  SiPM u(1, 22292, 6, 6);
-   {
+  {
+    SiPM u(1, 22292, 6, 6);
     std::vector<Photon> photonVec = GetRandomPhotonVec();
     sort(photonVec.begin(), photonVec.end(), compareByArrivalTime);
     std::cout << "--------------------------------------" << std::endl;
@@ -25,16 +25,23 @@ int main(int argc, char *argv[]) {
       if (crosstalkMicrocellVec.size() > 1) {
         std::cout << "CrossTalk Found...." << std::endl;
       }
-      for (auto& ctMc : crosstalkMicrocellVec) {
-        //u.GetIntegratedCharge(ctMc.cell, ctMc.arrivalTime);
-        Microcell& mc=u.GetMicrocell(ctMc.xbin,ctMc.ybin);
+      for (auto &ctMc : crosstalkMicrocellVec) {
+        // u.GetIntegratedCharge(ctMc.cell, ctMc.arrivalTime);
+        Microcell &mc = u.GetMicrocell(ctMc.xbin, ctMc.ybin);
         u.GetIntegratedCharge(mc, ctMc.arrivalTime);
-        //ctMc.cell.Print();
+        // ctMc.cell.Print();
         mc.Print();
       }
 
       phInd++;
     }
+
+    unsigned short numOfFiredCells = 0;
+    for (auto mc : u.GetVecOfMicrocells()) {
+      numOfFiredCells += 1 ? mc.Fired() : 0;
+    }
+
+    std::cout << "Number of Fired cells : " << numOfFiredCells << std::endl;
   }
 
   return 0;

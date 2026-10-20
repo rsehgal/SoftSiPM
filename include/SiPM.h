@@ -61,6 +61,8 @@ public:
   std::vector<CrosstalkHit> GetCrossTalk(Photon ph); //{}
   std::vector<CrosstalkHit> GetCrossTalk(Microcell primary,
                                          double arrivalTime); //{}
+
+  std::vector<Microcell> GetVecOfMicrocells() const;
 };
 
 #endif
