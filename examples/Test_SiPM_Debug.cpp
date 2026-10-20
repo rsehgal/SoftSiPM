@@ -50,10 +50,15 @@ int main(int argc, char *argv[]) {
                  "WITHOUT CROSSTALK ==============="
               << std::endl;
     SiPM v(1, 22292, 6, 6);
+   
     std::vector<Photon> photonVec = GetRandomPhotonVec();
+
+    v.Reset();
     sort(photonVec.begin(), photonVec.end(), compareByArrivalTime);
     std::cout << "Integrated Charge Without Crosstalk : "
               << v.GetIntegratedCharge(photonVec, false) << std::endl;
+
+    v.Reset();
     std::cout << "Integrated Charge With Crosstalk : "
               << v.GetIntegratedCharge(photonVec, true) << std::endl;
   }
