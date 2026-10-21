@@ -16,13 +16,13 @@
   double arrivalTime;
 };*/
 
-struct CrosstalkHit {
+/*struct CrosstalkHit {
   unsigned short xbin;
   unsigned short ybin;
   double arrivalTime;
 
   unsigned short GetCellID() { return ybin * numberOfMicrocellsX + xbin; }
-};
+};*/
 
 class SiPM {
   std::vector<Microcell> vecOfMicrocells;
@@ -43,7 +43,6 @@ public:
   ~SiPM();
   unsigned short size() const;
   unsigned short GetID() const;
-
   void Reset();
   unsigned short MicrocellId(double x, double y);
   Microcell &GetMicrocell(Photon ph);
@@ -51,10 +50,13 @@ public:
   Microcell &GetMicrocell(unsigned short xbin, unsigned short ybin);
 
   double GetIntegratedCharge(Microcell &mc, double arrivalTime);
+  double GetIntegratedCharge(unsigned short xbin, unsigned short ybin, double arrivalTime);
   // double GetIntegratedCharge_V1(Photon ph);
   // double GetIntegratedCharge_V2(Photon ph);
   double GetIntegratedCharge(Photon ph, bool crosstalk=true);
   double GetIntegratedCharge(std::vector<Photon> photonVec, bool crosstalk=true);
+  double GetIntegratedCharge(std::vector<CrosstalkHit> &hits);
+  double GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photonsVec);
 
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
 
@@ -63,6 +65,8 @@ public:
                                          double arrivalTime); //{}
 
   std::vector<Microcell> GetVecOfMicrocells() const;
+
+  void AddAfterpulses(std::vector<CrosstalkHit> &hits);
 };
 
 #endif

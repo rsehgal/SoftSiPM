@@ -8,12 +8,16 @@ unsigned short numberOfMicrocellsX     = std::sqrt(totalNumberOfMicrocells);
 unsigned short numberOfMicrocellsY     = std::sqrt(totalNumberOfMicrocells);
 
 double q = 0.0694;
+double tauAfterpulse = 20.;
+double pAfterpulse = 0.05;
 
 bool compareByArrivalTime(const Photon &a, const Photon &b)
 {
   return a.arrivalTime < b.arrivalTime;
 }
-
+bool compareHitByArrivalTime(const CrosstalkHit& a, CrosstalkHit &b){
+  return a.arrivalTime < b.arrivalTime;
+}
 std::vector<Photon> GetRandomPhotonVec()
 {
   std::vector<Photon> photonVec;

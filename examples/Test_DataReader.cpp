@@ -20,6 +20,9 @@ int main(int argc, char *argv[]) {
 
   v.Reset();
   std::cout << "Integrated Charge With Crosstalk : "<< v.GetIntegratedCharge(photonVec, true) << std::endl; 
-  
+ 
+  v.Reset();
+  std::cout << "Integrated Charge With Crosstalk and Afterpulses : "<< v.GetIntegratedCharge_CrossTalkAfterpulse(photonVec) << std::endl; 
+ 
   return 0;
 }
