@@ -56,6 +56,11 @@ public:
     }
     return simPhotonsVec;
   }
+std::vector<Photon> GetPhotonsVecSorted(Long64_t ent) {
+    std::vector<Photon> photonsVec = GetPhotonsVec(ent);
+    sort(photonsVec.begin(), photonsVec.end(), compareByArrivalTime);
+    return photonsVec;
+  }
 
   void Print(){
   std::cout << "EDep : " << eDep << " : numOfDetectedWLSPhotons : " << numOfDetectedWLSPhotons << std::endl;
