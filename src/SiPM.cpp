@@ -23,6 +23,10 @@ SiPM::SiPM(unsigned short sid, unsigned short nMicrocells, double xlen, double y
   // std::fill(vecOfMicrocells.begin(), vecOfMicrocells.end(), Microcell{});
 }
 
+void SiPM::SetSeed(unsigned int svalue){
+  rng.seed(svalue);
+}
+
 unsigned short SiPM::size() const
 {
   return vecOfMicrocells.size();

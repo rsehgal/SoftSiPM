@@ -67,6 +67,8 @@ public:
   std::vector<Microcell> GetVecOfMicrocells() const;
 
   void AddAfterpulses(std::vector<CrosstalkHit> &hits);
+
+  void SetSeed(unsigned int svalue);
 };
 
 #endif
