@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
   {
     std::cout << "========== TEsting it with blank photon vector ===========" << std::endl;
     double ic      = 0;
-    unsigned int n = 20000;
+    unsigned int n = 50000;
     photonVec.clear();
     for (unsigned int i = 0; i < n; i++) {
       v.Reset();

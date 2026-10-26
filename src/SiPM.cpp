@@ -165,8 +165,9 @@ double SiPM::GetIntegratedCharge(std::vector<CrosstalkHit> &hits)
 {
   sort(hits.begin(), hits.end(), compareHitByArrivalTime);
   double integratedCharge = 0.;
-  for (const auto &h : hits) {
-    integratedCharge += GetIntegratedCharge(h.xbin, h.ybin, h.arrivalTime);
+  for (auto &h : hits) {
+    //integratedCharge += GetIntegratedCharge(h.xbin, h.ybin, h.arrivalTime);
+    integratedCharge += GetIntegratedCharge(h); 
   }
   return integratedCharge;
 }
