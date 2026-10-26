@@ -23,7 +23,8 @@ SiPM::SiPM(unsigned short sid, unsigned short nMicrocells, double xlen, double y
   // std::fill(vecOfMicrocells.begin(), vecOfMicrocells.end(), Microcell{});
 }
 
-void SiPM::SetSeed(unsigned int svalue){
+void SiPM::SetSeed(unsigned int svalue)
+{
   rng.seed(svalue);
 }
 
@@ -89,29 +90,6 @@ double SiPM::GetIntegratedCharge(unsigned short xbin, unsigned short ybin, doubl
   return GetIntegratedCharge(mc, arrivalTime);
 }
 
-/*
-double SiPM::GetIntegratedCharge_V1(Photon ph)
-{
-  double integCharge = GetMicrocell(ph).IntegratedCharge(ph.arrivalTime);
-  if (verbose) std::cout << "Integrated charge of photon : " << integCharge <<
-std::endl; return integCharge;
-
-}
-
-double SiPM::GetIntegratedCharge_V2(Photon ph)
-{
-  return GetIntegratedCharge(GetMicrocell(ph),ph.arrivalTime);
-}
-
-double SiPM::GetIntegratedCharge(Photon ph)
-{
-  //double integCharge = GetMicrocell(ph.xposition,
-ph.yposition).IntegratedCharge(ph.arrivalTime); double integCharge =
-GetMicrocell(ph).IntegratedCharge(ph.arrivalTime); if (verbose) std::cout <<
-"Integrated charge of photon : " << integCharge << std::endl; return
-integCharge;
-
-}*/
 double SiPM::GetIntegratedCharge(Photon ph, bool crosstalk)
 {
   double integratedCharge = 0.;
@@ -137,8 +115,46 @@ double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec, bool crosstalk)
   return totalCharge;
 }
 
+double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec, ChargeMode mode)
+{
+  switch (mode) {
+    case ChargeMode::NoCrosstalk:
+      return GetIntegratedCharge(photonVec, false); // Calls the bool version for single photon/no crosstalk
+      
+    case ChargeMode::CrosstalkOnly:
+      return GetIntegratedCharge(photonVec, true);  // Calls the bool version with crosstalk = true
+      
+    case ChargeMode::CrosstalkAndAfterpulse: {
+      std::vector<CrosstalkHit> all = GetCrossTalkAndAfterpulse(photonVec);
+      return GetIntegratedCharge(all);
+    }
+    
+    case ChargeMode::CrosstalkAfterpulseDarkCount: {
+      std::vector<CrosstalkHit> all = GetCrossTalkAfterpulseDarkCount(photonVec);
+      return GetIntegratedCharge(all);
+    }
+  }
+  return 0.;
+}
+
+/*double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec, unsigned short option)
+{
+  if (option == 0) return GetIntegratedCharge(photonVec, false);
+  if (option == 1) return GetIntegratedCharge(photonVec, true);
+  if (option == 2) {
+    std::vector<CrosstalkHit> all = GetCrossTalkAndAfterpulse(photonVec);
+    return GetIntegratedCharge(all);
+  }
+  if (option == 3) {
+    std::vector<CrosstalkHit> all = GetCrossTalkAfterpulseDarkCount(photonVec);
+    return GetIntegratedCharge(all);
+  }
+  return 0.;
+}*/
+
 double SiPM::GetIntegratedCharge(std::vector<CrosstalkHit> &hits)
 {
+  sort(hits.begin(), hits.end(), compareHitByArrivalTime);
   double integratedCharge = 0.;
   for (const auto &h : hits) {
     integratedCharge += GetIntegratedCharge(h.xbin, h.ybin, h.arrivalTime);
@@ -170,7 +186,7 @@ void SiPM::AddAfterpulses(std::vector<CrosstalkHit> &hits)
     }
 }
 
-double SiPM::GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photonsVec)
+std::vector<CrosstalkHit> SiPM::GetCrossTalkAndAfterpulse(std::vector<Photon> photonsVec)
 {
   std::vector<CrosstalkHit> all;
   for (auto &ph : photonsVec) {
@@ -178,7 +194,46 @@ double SiPM::GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photons
     AddAfterpulses(h);
     all.insert(all.end(), h.begin(), h.end());
   }
-  sort(all.begin(),all.end(),compareHitByArrivalTime);
+  return all;
+}
+
+std::vector<CrosstalkHit> SiPM::GetDarkCounts(double tStart, double tEnd)
+{
+  double area = sipmXLength * sipmYLength;
+  double mu   = crossTalkRate * area * (tEnd - tStart) * 1e-9;
+  int n       = std::poisson_distribution<int>(mu)(rng);
+  std::uniform_real_distribution<double> ux(-sipmXLength / 2, sipmXLength / 2), uy(-sipmYLength / 2, sipmYLength / 2),
+      ut(tStart, tEnd);
+  std::vector<CrosstalkHit> all;
+
+  for (unsigned int i = 0; i < n; i++) {
+    Photon dark(ux(rng), uy(rng), ut(rng));
+    auto chain = GetCrossTalk(dark);
+    AddAfterpulses(chain);
+    all.insert(all.end(), chain.begin(), chain.end());
+  }
+
+  return all;
+}
+
+std::vector<CrosstalkHit> SiPM::GetCrossTalkAfterpulseDarkCount(std::vector<Photon> photonsVec)
+{
+  std::vector<CrosstalkHit> all       = GetCrossTalkAndAfterpulse(photonsVec);
+  std::vector<CrosstalkHit> darkCount = GetDarkCounts(0, 250);
+  all.insert(all.end(), darkCount.begin(), darkCount.end());
+  return all;
+}
+
+double SiPM::GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photonsVec)
+{
+  /*  std::vector<CrosstalkHit> all;
+    for (auto &ph : photonsVec) {
+      auto h = GetCrossTalk(ph);
+      AddAfterpulses(h);
+      all.insert(all.end(), h.begin(), h.end());
+    }*/
+  std::vector<CrosstalkHit> all = GetCrossTalkAndAfterpulse(photonsVec);
+  sort(all.begin(), all.end(), compareHitByArrivalTime);
   return GetIntegratedCharge(all);
 }
 std::vector<CrosstalkHit> SiPM::GetCrossTalk(Microcell primary, double primaryArrivalTime)

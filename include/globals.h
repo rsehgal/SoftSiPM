@@ -10,6 +10,16 @@
 #include <random>
 #include <type_traits>
 #include <iostream>
+
+// Inside SiPM.h (e.g., right before the class definition)
+enum class ChargeMode {
+    NoCrosstalk,
+    CrosstalkOnly,
+    CrosstalkAndAfterpulse,
+    CrosstalkAfterpulseDarkCount
+};
+
+
 // A flexible template function for integers and floating-point numbers
 struct Photon {
   double xposition;
@@ -32,8 +42,18 @@ struct Photon {
 extern bool verbose;
 // Only for testing
 extern std::vector<Photon> GetRandomPhotonVec();
+
+
 extern double tauAfterpulse;
 extern double pAfterpulse;
+extern double eventWindow;
+extern double preStart;
+extern double crossTalkRate;
+extern double sipmXLength;
+extern double sipmYLength;
+
+
+
 extern unsigned short totalNumberOfMicrocells;
 extern unsigned short numberOfMicrocellsX;
 extern unsigned short numberOfMicrocellsY;

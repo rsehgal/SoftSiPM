@@ -11,6 +11,16 @@ double q = 0.0694;
 double tauAfterpulse = 20.;
 double pAfterpulse = 0.05;
 
+//double tauAfterpulse;
+//double pAfterpulse;
+double eventWindow=250;
+double preStart=25;
+double KHz=1000.;
+double crossTalkRate=155*KHz;
+double mm=1;
+double sipmXLength=6*mm;
+double sipmYLength=6*mm;
+
 bool compareByArrivalTime(const Photon &a, const Photon &b)
 {
   return a.arrivalTime < b.arrivalTime;
