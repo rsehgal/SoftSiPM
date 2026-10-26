@@ -57,11 +57,11 @@ int main(int argc, char *argv[])
   }
 
   {
-    //USING ENUM
-    std::cout <<"======== USING ENUM ==========" << std::endl;
-    double icWithoutCrosstalk           = 0.;
-    double icWithCrosstalk              = 0.;
-    double icWithCrosstalkAndAfterpulse = 0.;
+    // USING ENUM
+    std::cout << "======== USING ENUM ==========" << std::endl;
+    double icWithoutCrosstalk                    = 0.;
+    double icWithCrosstalk                       = 0.;
+    double icWithCrosstalkAndAfterpulse          = 0.;
     double icWithCrosstalkAfterpulseAndDarkCount = 0.;
 
     unsigned int n = 1000;
@@ -82,11 +82,11 @@ int main(int argc, char *argv[])
       // std::cout << "Integrated Charge With Crosstalk : " << ic << std::endl;
 
       v.Reset();
-      ic = v.GetIntegratedCharge(photonVec,ChargeMode::CrosstalkAndAfterpulse);
+      ic = v.GetIntegratedCharge(photonVec, ChargeMode::CrosstalkAndAfterpulse);
       icWithCrosstalkAndAfterpulse += ic;
 
       v.Reset();
-      ic = v.GetIntegratedCharge(photonVec,ChargeMode::CrosstalkAfterpulseDarkCount);
+      ic = v.GetIntegratedCharge(photonVec, ChargeMode::CrosstalkAfterpulseDarkCount);
       icWithCrosstalkAfterpulseAndDarkCount += ic;
 
       // std::cout << "Integrated Charge With Crosstalk and Afterpulses : "
@@ -101,9 +101,20 @@ int main(int argc, char *argv[])
     std::cout << "Average Integrated Charge With Crosstalk : " << icWithCrosstalk << std::endl;
     std::cout << "Average Integrated Charge With Crosstalk and Afterpulse: " << icWithCrosstalkAndAfterpulse
               << std::endl;
-    std::cout << "Average Integrated Charge With Crosstalk Afterpulse and DarkCurrent : " << icWithCrosstalkAfterpulseAndDarkCount << std::endl;
-
+    std::cout << "Average Integrated Charge With Crosstalk Afterpulse and DarkCurrent : "
+              << icWithCrosstalkAfterpulseAndDarkCount << std::endl;
   }
 
+  {
+    std::cout << "========== TEsting it with blank photon vector ===========" << std::endl;
+    double ic      = 0;
+    unsigned int n = 1000;
+    photonVec.clear();
+    for (unsigned int i = 0; i < n; i++) {
+      ic += v.GetIntegratedCharge(photonVec, ChargeMode::CrosstalkAfterpulseDarkCount);
+    }
+    ic /= n;
+    std::cout << "Average Integrated charge without any primary photon : " << ic << std::endl;
+  }
   return 0;
 }
