@@ -59,7 +59,7 @@ public:
   double GetIntegratedCharge(std::vector<Photon> photonVec, ChargeMode mode);
   double GetIntegratedCharge(std::vector<CrosstalkHit> &hits);
   double GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photonsVec);
-
+  double GetIntegratedCharge(CrosstalkHit &hit) ;
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
 
   std::vector<CrosstalkHit> GetCrossTalk(Photon ph); //{}

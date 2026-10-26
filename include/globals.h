@@ -12,13 +12,7 @@
 #include <iostream>
 
 // Inside SiPM.h (e.g., right before the class definition)
-enum class ChargeMode {
-    NoCrosstalk,
-    CrosstalkOnly,
-    CrosstalkAndAfterpulse,
-    CrosstalkAfterpulseDarkCount
-};
-
+enum class ChargeMode { NoCrosstalk, CrosstalkOnly, CrosstalkAndAfterpulse, CrosstalkAfterpulseDarkCount };
 
 // A flexible template function for integers and floating-point numbers
 struct Photon {
@@ -33,26 +27,20 @@ struct Photon {
     arrivalTime = arrTime;
   }
 
-  void Print(){
-    std::cout << xposition <<" : "<< yposition << " ::  " << arrivalTime << std::endl;
-  }
+  void Print() { std::cout << xposition << " : " << yposition << " ::  " << arrivalTime << std::endl; }
 };
-
 
 extern bool verbose;
 // Only for testing
 extern std::vector<Photon> GetRandomPhotonVec();
 
-
 extern double tauAfterpulse;
 extern double pAfterpulse;
 extern double eventWindow;
 extern double preStart;
-extern double crossTalkRate;
+extern double darkCountRate;
 extern double sipmXLength;
 extern double sipmYLength;
-
-
 
 extern unsigned short totalNumberOfMicrocells;
 extern unsigned short numberOfMicrocellsX;
@@ -64,11 +52,13 @@ struct CrosstalkHit {
   unsigned short ybin;
   double arrivalTime;
 
+  bool isValid() { return xbin >= 0 && ybin >= 0 && xbin < numberOfMicrocellsX && ybin < numberOfMicrocellsY; }
+
   unsigned short GetCellID() { return ybin * numberOfMicrocellsX + xbin; }
 };
 
-extern bool compareByArrivalTime(const Photon& a, const Photon& b);
-extern bool compareHitByArrivalTime(const CrosstalkHit& a, CrosstalkHit &b);
+extern bool compareByArrivalTime(const Photon &a, const Photon &b);
+extern bool compareHitByArrivalTime(const CrosstalkHit &a, CrosstalkHit &b);
 
 template <typename T>
 T getRandomNumber(T min, T max)
@@ -85,7 +75,5 @@ T getRandomNumber(T min, T max)
     return dist(gen);
   }
 }
-
-
 
 #endif
