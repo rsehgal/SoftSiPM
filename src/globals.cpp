@@ -25,7 +25,7 @@ bool compareByArrivalTime(const Photon &a, const Photon &b)
 {
   return a.arrivalTime < b.arrivalTime;
 }
-bool compareHitByArrivalTime(const CrosstalkHit& a, CrosstalkHit &b){
+bool compareHitByArrivalTime(const CrosstalkHit& a, const CrosstalkHit &b){
   return a.arrivalTime < b.arrivalTime;
 }
 std::vector<Photon> GetRandomPhotonVec()

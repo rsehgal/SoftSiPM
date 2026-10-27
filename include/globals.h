@@ -52,13 +52,13 @@ struct CrosstalkHit {
   unsigned short ybin;
   double arrivalTime;
 
-  bool isValid() { return xbin >= 0 && ybin >= 0 && xbin < numberOfMicrocellsX && ybin < numberOfMicrocellsY; }
+  bool isValid() const { return xbin < numberOfMicrocellsX && ybin < numberOfMicrocellsY; }
 
-  unsigned short GetCellID() { return ybin * numberOfMicrocellsX + xbin; }
+  unsigned short GetCellID() const { return ybin * numberOfMicrocellsX + xbin; }
 };
 
 extern bool compareByArrivalTime(const Photon &a, const Photon &b);
-extern bool compareHitByArrivalTime(const CrosstalkHit &a, CrosstalkHit &b);
+extern bool compareHitByArrivalTime(const CrosstalkHit &a, const CrosstalkHit &b);
 
 template <typename T>
 T getRandomNumber(T min, T max)
