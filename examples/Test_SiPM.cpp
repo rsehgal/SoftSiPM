@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     unsigned short phCount = 0;
     for (auto const &ph : photonVec) {
       // std::vector<Microcell> crosstalkMicrocellVec = u.GetCrossTalk(u.GetMicrocell(ph));
-      std::vector<Microcell> crosstalkMicrocellVec = u.GetCrossTalk(ph);
+      std::vector<CrosstalkHit> crosstalkMicrocellVec = u.GetCrossTalk(ph);
       if (crosstalkMicrocellVec.size() > 1) {
         std::cout << "Photon Index : " << phCount << " :: Crosstalk found....." << std::endl;
 
@@ -82,13 +82,12 @@ std::cout << "--------------- Resetting full SiPM ------------------" << std::en
     // Checking for Crosstalk
     unsigned short phCount = 0;
     for (auto const &ph : photonVec) {
-      // std::vector<Microcell> crosstalkMicrocellVec = u.GetCrossTalk(u.GetMicrocell(ph));
-      std::vector<CrosstalkHit> crosstalkMicrocellVec = u.GetCrossTalk_V2(ph);
+      std::vector<CrosstalkHit> crosstalkMicrocellVec = u.GetCrossTalk(ph);
       if (crosstalkMicrocellVec.size() > 1) {
         std::cout << "Photon Index : " << phCount << " :: Crosstalk found....." << std::endl;
 
         for (auto& ctMC : crosstalkMicrocellVec) {
-          ctMC.cell.Print();
+          ctMC.Print();
         }
       }
       phCount++;

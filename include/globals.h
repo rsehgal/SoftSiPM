@@ -55,6 +55,12 @@ struct CrosstalkHit {
   bool isValid() const { return xbin < numberOfMicrocellsX && ybin < numberOfMicrocellsY; }
 
   unsigned short GetCellID() const { return ybin * numberOfMicrocellsX + xbin; }
+
+  void Print() const
+  {
+    std::cout << "CellID : " << GetCellID() << " : xbin : " << xbin << " : ybin : " << ybin
+              << " : ArrivalTime : " << arrivalTime << std::endl;
+  }
 };
 
 extern bool compareByArrivalTime(const Photon &a, const Photon &b);
