@@ -11,6 +11,9 @@ double q = 0.0694;
 double tauAfterpulse = 20.;
 double pAfterpulse = 0.05;
 
+double kTauRecharge = 50.0;   // ns
+double kQfullFC     = 1009.0; // fC
+
 //double tauAfterpulse;
 //double pAfterpulse;
 double eventWindow=250;

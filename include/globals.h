@@ -34,6 +34,8 @@ extern bool verbose;
 // Only for testing
 extern std::vector<Photon> GetRandomPhotonVec();
 
+extern double kTauRecharge;
+extern double kQfullFC;
 extern double tauAfterpulse;
 extern double pAfterpulse;
 extern double eventWindow;
@@ -46,6 +48,19 @@ extern unsigned short totalNumberOfMicrocells;
 extern unsigned short numberOfMicrocellsX;
 extern unsigned short numberOfMicrocellsY;
 extern double q;
+
+struct Avalanche {
+  double charge;
+  double arrivalTime;
+
+
+  Avalanche(double ch, double arTme) : charge(ch), arrivalTime(arTme){
+  }
+  
+  void Print(){
+    std::cout << "Charge : " << charge << " :: ArrivalTime : " << arrivalTime << std::endl;
+  }
+};
 
 struct CrosstalkHit {
   unsigned short xbin;

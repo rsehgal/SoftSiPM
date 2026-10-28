@@ -9,9 +9,6 @@
 #include <iostream>
 #include <cmath>
 #include "globals.h"
-constexpr double kTauRecharge = 50.0;   // ns
-constexpr double kQfullFC     = 1009.0; // fC
-
 class Microcell {
   unsigned short cellId = 0;
   bool fired            = false;
