@@ -120,6 +120,7 @@ double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec, bool crosstalk)
 
 double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec, ChargeMode mode)
 {
+  sort(photonVec.begin(), photonVec.end(), compareByArrivalTime);
   switch (mode) {
   case ChargeMode::NoCrosstalk:
     return GetIntegratedCharge(photonVec, false); // Calls the bool version for single photon/no crosstalk
@@ -140,20 +141,6 @@ double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec, ChargeMode mode)
   return 0.;
 }
 
-/*double SiPM::GetIntegratedCharge(std::vector<Photon> photonVec, unsigned short option)
-{
-  if (option == 0) return GetIntegratedCharge(photonVec, false);
-  if (option == 1) return GetIntegratedCharge(photonVec, true);
-  if (option == 2) {
-    std::vector<CrosstalkHit> all = GetCrossTalkAndAfterpulse(photonVec);
-    return GetIntegratedCharge(all);
-  }
-  if (option == 3) {
-    std::vector<CrosstalkHit> all = GetCrossTalkAfterpulseDarkCount(photonVec);
-    return GetIntegratedCharge(all);
-  }
-  return 0.;
-}*/
 double SiPM::GetIntegratedCharge(const CrosstalkHit &hit)
 {
   double integratedCharge = 0.;
@@ -161,7 +148,7 @@ double SiPM::GetIntegratedCharge(const CrosstalkHit &hit)
   return integratedCharge;
 }
 
-double SiPM::GetIntegratedCharge(std::vector<CrosstalkHit> &hits)
+double SiPM::GetIntegratedCharge(std::vector<CrosstalkHit> hits)
 {
   sort(hits.begin(), hits.end(), compareHitByArrivalTime);
   double integratedCharge = 0.;
@@ -244,9 +231,19 @@ std::vector<CrosstalkHit> SiPM::GetHitsVec(std::vector<Photon> photonsVec, Charg
   }
 }
 
+double SiPM::GetIntegratedCharge(std::vector<Avalanche> avVec)
+{
+  double ic = 0.;
+  for (const auto &av : avVec) {
+    ic += av.charge;
+  }
+  return ic;
+}
+
 std::vector<Avalanche> SiPM::GetAvalancheVec(std::vector<Photon> photonsVec, ChargeMode mode)
 {
   std::vector<CrosstalkHit> hitsVec = GetHitsVec(photonsVec, mode);
+  std::stable_sort(hitsVec.begin(), hitsVec.end(), compareHitByArrivalTime);
   std::vector<Avalanche> avalancheVec;
   for (const auto &hit : hitsVec) {
     avalancheVec.push_back({GetIntegratedCharge(hit), hit.arrivalTime});

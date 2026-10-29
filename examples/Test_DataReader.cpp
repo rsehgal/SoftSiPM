@@ -11,7 +11,7 @@
 int main(int argc, char *argv[])
 {
   SiPM v(1, 22292, 6, 6);
-  DataReader *r                 = new DataReader("../SimData/out_1K.root", "ftree");
+  DataReader *r                 = new DataReader(argv[1], "ftree");
   std::vector<Photon> photonVec = r->GetPhotonsVec(10);
   sort(photonVec.begin(), photonVec.end(), compareByArrivalTime);
   r->Print();

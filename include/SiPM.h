@@ -53,14 +53,16 @@ public:
   double GetIntegratedCharge(unsigned short xbin, unsigned short ybin, double arrivalTime);
   // double GetIntegratedCharge_V1(Photon ph);
   // double GetIntegratedCharge_V2(Photon ph);
+
   double GetIntegratedCharge(Photon ph, bool crosstalk=true);
   double GetIntegratedCharge(std::vector<Photon> photonVec, bool crosstalk=true);
-  //double GetIntegratedCharge(std::vector<Photon> photonVec, unsigned short option);
   double GetIntegratedCharge(std::vector<Photon> photonVec, ChargeMode mode);
-  double GetIntegratedCharge(std::vector<CrosstalkHit> &hits);
-  double GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photonsVec);
+  double GetIntegratedCharge(std::vector<CrosstalkHit> hits);
+  double GetIntegratedCharge(std::vector<Avalanche> avVec);
   double GetIntegratedCharge(const CrosstalkHit &hit) ;
+
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
+  double GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photonsVec);
 
   std::vector<CrosstalkHit> GetCrossTalk(Photon ph); //{}
   std::vector<CrosstalkHit> GetCrossTalk(Microcell primary,
