@@ -59,7 +59,7 @@ public:
   double GetIntegratedCharge(std::vector<Photon> photonVec, ChargeMode mode);
   double GetIntegratedCharge(std::vector<CrosstalkHit> &hits);
   double GetIntegratedCharge_CrossTalkAfterpulse(std::vector<Photon> photonsVec);
-  double GetIntegratedCharge(CrosstalkHit &hit) ;
+  double GetIntegratedCharge(const CrosstalkHit &hit) ;
   unsigned short GetCellIDFromBins(unsigned short xbin, unsigned short ybin);
 
   std::vector<CrosstalkHit> GetCrossTalk(Photon ph); //{}
@@ -68,6 +68,11 @@ public:
   std::vector<CrosstalkHit> GetDarkCounts(double tStart, double tEnd);
   std::vector<CrosstalkHit> GetCrossTalkAndAfterpulse(std::vector<Photon> photonsVec);
   std::vector<CrosstalkHit> GetCrossTalkAfterpulseDarkCount(std::vector<Photon> photonsVec);
+  std::vector<CrosstalkHit> GetPrimaryHits(std::vector<Photon> photonsVec);
+  std::vector<CrosstalkHit> GetCrossTalk(std::vector<Photon> photonsVec); //{}
+
+  std::vector<CrosstalkHit> GetHitsVec(std::vector<Photon> photonsVec, ChargeMode mode);
+  std::vector<Avalanche> GetAvalancheVec(std::vector<Photon> photonsVec, ChargeMode mode);
 
   std::vector<Microcell> GetVecOfMicrocells() const;
 
